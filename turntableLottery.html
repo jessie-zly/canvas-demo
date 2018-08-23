@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>转盘抽奖-demo</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+        }
+
+        #turntable {
+            position: relative;
+            width: 400px;
+            height: 400px;
+            background: url(./images/turntable.gif) no-repeat center;
+        }
+
+        #canvas {
+            transition: all 6s ease;
+            background: url(./images/turntable-bg.png) no-repeat center;
+        }
+
+        #pointer {
+            position: absolute;
+            left: 110px;
+            top: 110px;
+            width: 180px;
+            height: 180px;
+            background: url(./images/pointer.png) no-repeat center;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="turntable">
+        <canvas id="canvas" width="400" height="400">抱歉！浏览器不支持。</canvas>
+        <span id="pointer"></span>
+    </div>
+</body>
+
+</html>
+<script>
+    // 初始角度
+    let startAngle = 0;
+    // 奖品数据
+    let rewardList = [
+        "50M流量包","10Q币",
+        "谢谢参与","5Q币",
+        "10M流量包","20M流量包"
+    ];
+</script>
+<script>
+    window.onload=function(){
+        // canvas 初始化
+        canvasInit();
+        const pointer = document.getElementById('pointer');
+         // 抽奖
+        pointer.onclick = function(){
+            let index = randomNum(0,rewardList.length);
+            const baseAngle = Math.PI*2/rewardList.length;
+            canvas.style.transform = `rotate(${baseAngle*index}deg)`;
+            // var time = 3000;
+            // var a0 = (Math.random() + 5) / 100;
+            // var clock = 20;
+            // var interval = setInterval(function () {
+            //     var a = time >= 1500 ? a0 : -a0;
+            //     var v = time >= 1500 ? a * (3000 - time) : a0 * 1500 + a * (1500 - time);
+            //     ctx.translate(600, 600);
+            //     ctx.rotate(Math.PI / 180 * v);
+            //     ctx.translate(-600, -600);
+            //     ctx.clearRect(0, 0, 1200, 1200);
+            //     name(data);
+            //     time -= clock;
+            //     //
+            //     if (time == 0) {
+            //         window.clearInterval(interval);
+            //     }
+            // }, clock)
+            }
+        }
+</script>
+<script >
+    // canvas 初始化
+    function canvasInit(){
+        // 计算每个奖品所占弧度
+        const len = rewardList.length;
+        const baseAngle = Math.PI*2/len;
+        // 获取画布
+        const canvas = document.getElementById('canvas');
+        // 判断是否支持 canvas
+        if (!canvas.getContext) {
+            alert('抱歉！浏览器不支持');
+            return;
+        }
+        // 获取 canvas 上下文
+        const ctx = canvas.getContext('2d');
+        // 获取画布宽高
+        const w = canvas.width;
+        const h = canvas.height;
+        // 先清空
+        ctx.clearRect(0,0,w,h);
+        // 从0°开始画   index ->奖品序号
+        for(let index = 0; index < len; index++){
+            let angle = startAngle + baseAngle * index;
+            // 保存当前状态
+            ctx.save();
+            // 开始一条新路径
+            ctx.beginPath();
+            // 位移到圆心，下面需要围绕圆心旋转
+            ctx.translate(200, 200);
+            // 从(0, 0)坐标开始定义一条新的子路径
+            ctx.moveTo(0, 0);
+            // 旋转弧度,需将角度转换为弧度,使用 degrees * Math.PI/180 公式进行计算。
+            ctx.rotate((360 / len * index + 360 / len / 2) * Math.PI / 180);
+            // 恢复前一个状态
+            ctx.restore();
+        }
+    };
+    // 随机数
+    function randomNum(n, m){
+        let random = Math.floor(Math.random()*(m-n)) + n;
+        return random;
+    }
+</script>
