@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>canvas demo</title>
+</head>
+
+<body>
+  <canvas id="canvas" width="300" height="300">你的浏览器不支持canvas,请升级你的浏览器</canvas>
+</body>
+
+</html>
+<script>
+  let canvas = document.getElementById('canvas');
+  if(canvas.getContext){
+    console.log('draw img here');
+    const ctx = canvas.getContext('2d');
+    // ctx.strokeStyle = 'rgb(200,0,0)';
+    // ctx.strokeRect (10, 10, 55, 50);
+    //
+    ctx.beginPath(); // 开始一条新路径
+    // ctx.lineCap="round"; // 线条末端线帽的样式 butt | round | square
+    ctx.lineJoin="round"; // 相交线样式 bevel | round | miter
+    ctx.miterLimit=5; // 最大斜接长度 只有当 lineJoin 属性为 "miter" 时，miterLimit 才有效。
+    ctx.lineWidth=10; // 当前线条的宽度
+    ctx.moveTo(20,20);
+    // ctx.lineTo(20,200);
+    ctx.lineTo(100,50);
+    ctx.lineTo(20,100);
+    ctx.stroke();
+
+  }else{
+    console.log('不支持 canvas');
+  }
+</script>

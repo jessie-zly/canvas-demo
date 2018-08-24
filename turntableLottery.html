@@ -48,47 +48,13 @@
     let startAngle = 0;
     // 奖品数据
     let rewardList = [
-        "50M流量包","10Q币",
-        "谢谢参与","5Q币",
-        "10M流量包","20M流量包"
+        "理财金1000元","理财金2000元",
+        "谢谢参与","理财金5000元",
+        "理财金1毛","谢谢参与"
     ];
 </script>
 <script>
     window.onload=function(){
-        // canvas 初始化
-        canvasInit();
-        const pointer = document.getElementById('pointer');
-         // 抽奖
-        pointer.onclick = function(){
-            let index = randomNum(0,rewardList.length);
-            const baseAngle = Math.PI*2/rewardList.length;
-            canvas.style.transform = `rotate(${baseAngle*index}deg)`;
-            // var time = 3000;
-            // var a0 = (Math.random() + 5) / 100;
-            // var clock = 20;
-            // var interval = setInterval(function () {
-            //     var a = time >= 1500 ? a0 : -a0;
-            //     var v = time >= 1500 ? a * (3000 - time) : a0 * 1500 + a * (1500 - time);
-            //     ctx.translate(600, 600);
-            //     ctx.rotate(Math.PI / 180 * v);
-            //     ctx.translate(-600, -600);
-            //     ctx.clearRect(0, 0, 1200, 1200);
-            //     name(data);
-            //     time -= clock;
-            //     //
-            //     if (time == 0) {
-            //         window.clearInterval(interval);
-            //     }
-            // }, clock)
-            }
-        }
-</script>
-<script >
-    // canvas 初始化
-    function canvasInit(){
-        // 计算每个奖品所占弧度
-        const len = rewardList.length;
-        const baseAngle = Math.PI*2/len;
         // 获取画布
         const canvas = document.getElementById('canvas');
         // 判断是否支持 canvas
@@ -101,6 +67,34 @@
         // 获取画布宽高
         const w = canvas.width;
         const h = canvas.height;
+        // canvas 初始化
+        canvasInit(rewardList, ctx, w, h);
+        //
+        const pointer = document.getElementById('pointer');
+         // 抽奖
+        pointer.onclick = function(){
+            let index = randomNum(0,rewardList.length);
+            let reward = '';
+            rewardList.map((item,indexItem) => {
+                console.log('indexItem', indexItem)
+                if (indexItem == index){
+                    reward = item;
+                }
+            });
+            console.log('奖品为: ', reward);
+            const baseAngle = Math.PI * 2 / rewardList.length;
+            angle = baseAngle * index * 360 * 3;
+            // canvas.style.transform = `rotate(${angle}deg)`;
+            go(ctx, w, h);
+            }
+        }
+</script>
+<script >
+    // canvas 初始化
+    function canvasInit(rewardList, ctx, w, h){
+        // 计算每个奖品所占弧度
+        const len = rewardList.length;
+        const baseAngle = Math.PI * 2 / len;
         // 先清空
         ctx.clearRect(0,0,w,h);
         // 从0°开始画   index ->奖品序号
@@ -124,5 +118,22 @@
     function randomNum(n, m){
         let random = Math.floor(Math.random()*(m-n)) + n;
         return random;
+    }
+    // 转盘旋转
+    function go(rewardList, ctx, w, h){
+        let time = 3000;
+        let clock = 20;
+        let a0 = (Math.random() + 5) / 100;
+        let timer = setInterval(function(){
+            let a = time >= 1500 ? a0 : -a0;
+            let v = time >= 1500 ? a * (3000 - time) : a0 * 1500 + a * (1500 - time);
+            ctx.translate(200, 200);
+            ctx.rotate(Math.PI / 180 * v);
+            ctx.clearRect(0, 0, w, h);
+            time -= clock;
+            if (time == 0) {
+                clearInterval(timer);
+            }
+        },clock);
     }
 </script>
